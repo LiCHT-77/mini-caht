@@ -1,0 +1,123 @@
+syntax = "proto3";
+
+package grpcuser;
+
+option go_package = "/pb";
+
+service UserService {
+    // An user login
+    rpc Login (LoginRequest) returns (LoginResponse);
+
+    // Register new user
+    rpc Register (RegisterRequest) returns (RegisterResponse);
+    
+    // Get an user by id
+    rpc GetUser (GetUserRequest) returns (GetUserResponse);
+
+    // Update user info
+    rpc PutUser (PutUserRequest) returns (PutUserResponse);
+    
+    // Delete user by id
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+    
+    // Get user list by ids
+    rpc GetUsers (GetUsersRequest) returns (GetUsersResponse);
+
+    // Add a freind by user_id
+    rpc AddFriend (AddFriendRequest) returns (AddFriendResponse);
+
+    // Remove a freind by usere_id
+    rpc RemoveFriend (RemoveFriendRequest) returns (RemoveFriendResponse);
+
+    // Get friend list of authorized user
+    rpc GetFriends (GetFriendsRequest) returns (GetFriendsResponse);
+}
+
+// Requests
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message RegisterRequest {
+    User user = 1;
+}
+
+message GetUserRequest {
+    int32 id = 1;
+}
+
+message PutUserRequest {
+    int32 id = 1;
+    User user = 2;
+}
+
+message DeleteUserRequest {
+    int32 id = 1;
+}
+
+message GetUsersRequest {
+    repeated int32 ids = 1;
+}
+
+message AddFriendRequest {
+    int32 id = 1;
+}
+
+message RemoveFriendRequest {
+    int32 id = 1;
+}
+
+message GetFriendsRequest {
+    int32 id = 1;
+}
+
+// Responses
+message LoginResponse {
+    User user = 1;
+    string access_token = 2;
+}
+
+message RegisterResponse {
+    User user = 1;
+    string access_token = 2;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+message PutUserResponse {
+    //
+}
+
+message DeleteUserResponse {
+    //
+}
+
+message GetUsersResponse {
+    repeated User user = 1;
+}
+
+message AddFriendResponse {
+    // 
+}
+
+message RemoveFriendResponse {
+    //
+}
+
+message GetFriendsResponse {
+    repeated User friend = 1;
+}
+
+// Objects
+/**
+ * For ent.User object
+ */
+message User {
+    int32 id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+}
