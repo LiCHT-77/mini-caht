@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package grpcuser;
+package minichat.user;
 
 option go_package = "/pb";
 

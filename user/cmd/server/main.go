@@ -30,7 +30,6 @@ var (
 func main() {
 	flag.Parse()
 
-	// lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen %v", err)
@@ -60,7 +59,7 @@ func main() {
 
 	jwtManager := auth.NewJWTManager(secretKey, tokenDuration)
 	interceptor := auth.NewAuthInterceptor(jwtManager, map[string]bool{
-		"/grpcuser.UserService/GetUser": false,
+		"/minichat.user.UserService/GetUser": false,
 	})
 	ops = []grpc.ServerOption{
 		grpc.UnaryInterceptor(interceptor.Unary()),

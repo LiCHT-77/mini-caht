@@ -10,7 +10,6 @@ import (
 	"github.com/LiCHT-77/mini-chat/user/pb"
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -18,10 +17,6 @@ type Server struct {
 	dbClient   *ent.Client
 	jwtManager *auth.JWTManager
 	hashKey    int
-}
-
-func AuthOnly() map[string]bool {
-	return map[string]bool{}
 }
 
 func NewUserServer(dbClient *ent.Client, jwtManager *auth.JWTManager, hashKey int) pb.UserServiceServer {
@@ -112,7 +107,7 @@ func (s *Server) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.G
 
 // Update authorized user info
 func (s *Server) PutUser(ctx context.Context, request *pb.PutUserRequest) (*pb.PutUserResponse, error) {
-	if authUser, err := s.getAuthUser(ctx); err != nil || authUser.Id != request.GetId() {
+	if authUser, err := auth.GetAuthUser(ctx, s); err != nil || authUser.Id != request.GetId() {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update user")
 	}
 
@@ -152,7 +147,7 @@ func (s *Server) GetUsers(ctx context.Context, request *pb.GetUsersRequest) (*pb
 
 // Authorized user add friend by user_id
 func (s *Server) AddFriend(ctx context.Context, request *pb.AddFriendRequest) (*pb.AddFriendResponse, error) {
-	authUser, err := s.getAuthUser(ctx)
+	authUser, err := auth.GetAuthUser(ctx, s)
 	if err != nil {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update user: %v", err)
 	}
@@ -170,7 +165,7 @@ func (s *Server) AddFriend(ctx context.Context, request *pb.AddFriendRequest) (*
 
 // Authorized user remove friend by user_id
 func (s *Server) RemoveFriend(ctx context.Context, request *pb.RemoveFriendRequest) (*pb.RemoveFriendResponse, error) {
-	authUser, err := s.getAuthUser(ctx)
+	authUser, err := auth.GetAuthUser(ctx, s)
 	if err != nil {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update user: %v", err)
 	}
@@ -206,26 +201,9 @@ func (s *Server) GetFriends(ctx context.Context, request *pb.GetFriendsRequest) 
 	return &pb.GetFriendsResponse{Friend: pbFriends}, nil
 }
 
-// Get authorized user from metadata
-// This method is not rpc method
-func (s *Server) getAuthUser(ctx context.Context) (*pb.User, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Errorf(codes.Unauthenticated, "metadata is not provided")
-	}
-
-	values := md["authorization"]
-	if len(values) == 0 {
-		return nil, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
-	}
-
-	accessToken := values[0]
-	claims, err := s.jwtManager.Verify(accessToken)
-	if err != nil {
-		return nil, status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
-	}
-
-	return claims.User, nil
+// Get auth.JwtManger
+func (s *Server) GetJwtManager() *auth.JWTManager {
+	return s.jwtManager
 }
 
 func encodeToProtoUser(user *ent.User) *pb.User {

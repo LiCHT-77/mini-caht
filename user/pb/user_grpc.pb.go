@@ -48,7 +48,7 @@ func NewUserServiceClient(cc grpc.ClientConnInterface) UserServiceClient {
 
 func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
 	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/Login", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ func (c *userServiceClient) Login(ctx context.Context, in *LoginRequest, opts ..
 
 func (c *userServiceClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (c *userServiceClient) Register(ctx context.Context, in *RegisterRequest, o
 
 func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error) {
 	out := new(GetUserResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/GetUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/GetUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +75,7 @@ func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opt
 
 func (c *userServiceClient) PutUser(ctx context.Context, in *PutUserRequest, opts ...grpc.CallOption) (*PutUserResponse, error) {
 	out := new(PutUserResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/PutUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/PutUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -84,7 +84,7 @@ func (c *userServiceClient) PutUser(ctx context.Context, in *PutUserRequest, opt
 
 func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
 	out := new(DeleteUserResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/DeleteUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserReques
 
 func (c *userServiceClient) GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error) {
 	out := new(GetUsersResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/GetUsers", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/GetUsers", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +102,7 @@ func (c *userServiceClient) GetUsers(ctx context.Context, in *GetUsersRequest, o
 
 func (c *userServiceClient) AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*AddFriendResponse, error) {
 	out := new(AddFriendResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/AddFriend", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/AddFriend", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func (c *userServiceClient) AddFriend(ctx context.Context, in *AddFriendRequest,
 
 func (c *userServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*RemoveFriendResponse, error) {
 	out := new(RemoveFriendResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/RemoveFriend", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/RemoveFriend", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -120,7 +120,7 @@ func (c *userServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRe
 
 func (c *userServiceClient) GetFriends(ctx context.Context, in *GetFriendsRequest, opts ...grpc.CallOption) (*GetFriendsResponse, error) {
 	out := new(GetFriendsResponse)
-	err := c.cc.Invoke(ctx, "/grpcuser.UserService/GetFriends", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/GetFriends", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -204,7 +204,7 @@ func _UserService_Login_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/Login",
+		FullMethod: "/minichat.user.UserService/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Login(ctx, req.(*LoginRequest))
@@ -222,7 +222,7 @@ func _UserService_Register_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/Register",
+		FullMethod: "/minichat.user.UserService/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).Register(ctx, req.(*RegisterRequest))
@@ -240,7 +240,7 @@ func _UserService_GetUser_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/GetUser",
+		FullMethod: "/minichat.user.UserService/GetUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).GetUser(ctx, req.(*GetUserRequest))
@@ -258,7 +258,7 @@ func _UserService_PutUser_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/PutUser",
+		FullMethod: "/minichat.user.UserService/PutUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).PutUser(ctx, req.(*PutUserRequest))
@@ -276,7 +276,7 @@ func _UserService_DeleteUser_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/DeleteUser",
+		FullMethod: "/minichat.user.UserService/DeleteUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).DeleteUser(ctx, req.(*DeleteUserRequest))
@@ -294,7 +294,7 @@ func _UserService_GetUsers_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/GetUsers",
+		FullMethod: "/minichat.user.UserService/GetUsers",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).GetUsers(ctx, req.(*GetUsersRequest))
@@ -312,7 +312,7 @@ func _UserService_AddFriend_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/AddFriend",
+		FullMethod: "/minichat.user.UserService/AddFriend",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).AddFriend(ctx, req.(*AddFriendRequest))
@@ -330,7 +330,7 @@ func _UserService_RemoveFriend_Handler(srv interface{}, ctx context.Context, dec
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/RemoveFriend",
+		FullMethod: "/minichat.user.UserService/RemoveFriend",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).RemoveFriend(ctx, req.(*RemoveFriendRequest))
@@ -348,7 +348,7 @@ func _UserService_GetFriends_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/grpcuser.UserService/GetFriends",
+		FullMethod: "/minichat.user.UserService/GetFriends",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServiceServer).GetFriends(ctx, req.(*GetFriendsRequest))
@@ -360,7 +360,7 @@ func _UserService_GetFriends_Handler(srv interface{}, ctx context.Context, dec f
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var UserService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "grpcuser.UserService",
+	ServiceName: "minichat.user.UserService",
 	HandlerType: (*UserServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
