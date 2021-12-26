@@ -7,7 +7,7 @@ DB_USER = root
 DB_PASSWORD = root
 DB_PORT = 3306
 
-SERVICE_LIST := user vue-client proxy
+SERVICE_LIST := user room vue-client proxy
 
 # conpile protocol baffer 
 genpb:
@@ -75,8 +75,8 @@ migrate-user:
 migrate-%:
 	docker exec -it mini-chat-$* \
 		go run /go/src/cmd/migration/main.go \
-		-user %{DB_USER} \
-		-pass %{DB_PASSWORD} \
+		-user ${DB_USER} \
+		-pass ${DB_PASSWORD} \
 		-h mini-chat-$*-db \
 		-p ${DB_PORT} \
 		-n $*_db
