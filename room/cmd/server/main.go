@@ -7,10 +7,10 @@ import (
 	"net"
 	"time"
 
+	"github.com/LiCHT-77/mini-chat/room/ent"
+	"github.com/LiCHT-77/mini-chat/room/pb"
+	"github.com/LiCHT-77/mini-chat/room/service"
 	"github.com/LiCHT-77/mini-chat/user/auth"
-	"github.com/LiCHT-77/mini-chat/user/ent"
-	"github.com/LiCHT-77/mini-chat/user/pb"
-	"github.com/LiCHT-77/mini-chat/user/service"
 	"github.com/go-sql-driver/mysql"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -18,7 +18,6 @@ import (
 
 var (
 	port          = flag.Int("port", 8080, "a server port")
-	hasKey        = flag.Int("hashkey", 100, "hash key")
 	dbUser        = flag.String("user", "root", "database user")
 	dbPass        = flag.String("pass", "", "database user password")
 	dbAddr        = flag.String("addr", "", "database address")
@@ -30,7 +29,6 @@ var (
 func main() {
 	flag.Parse()
 
-	// lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", *port))
 	if err != nil {
 		log.Fatalf("failed to listen %v", err)
@@ -59,15 +57,20 @@ func main() {
 	var ops []grpc.ServerOption
 
 	jwtManager := auth.NewJWTManager(secretKey, tokenDuration)
+	grpcServerPath := "/minichat.room.RoomService"
 	interceptor := auth.NewAuthInterceptor(jwtManager, map[string]bool{
-		"/grpcuser.UserService/GetUser": false,
+		grpcServerPath + "PutRoom":     true,
+		grpcServerPath + "DeleteRoom":  true,
+		grpcServerPath + "GetRoomList": true,
+		grpcServerPath + "JoinRoom":    true,
+		grpcServerPath + "ExitRoom":    true,
 	})
 	ops = []grpc.ServerOption{
 		grpc.UnaryInterceptor(interceptor.Unary()),
 	}
 
 	grpcServer := grpc.NewServer(ops...)
-	pb.RegisterUserServiceServer(grpcServer, service.NewUserServer(client, jwtManager, *hasKey))
+	pb.RegisterRoomServiceServer(grpcServer, service.NewRoomServer(client, jwtManager))
 	reflection.Register(grpcServer)
 
 	if err := grpcServer.Serve(lis); err != nil {

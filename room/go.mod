@@ -3,27 +3,22 @@ module github.com/LiCHT-77/mini-chat/room
 go 1.17
 
 require (
-	entgo.io/ent v0.9.1 // indirect
-	github.com/go-bindata/go-bindata v1.0.1-0.20190711162640-ee3c2418e368 // indirect
-	github.com/go-openapi/inflect v0.19.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/google/uuid v1.3.0 // indirect
-	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/mattn/go-runewidth v0.0.9 // indirect
-	github.com/olekukonko/tablewriter v0.0.5 // indirect
-	github.com/spf13/cobra v1.1.3 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/mod v0.4.2 // indirect
-	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
-	golang.org/x/tools v0.1.5 // indirect
-	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
-	google.golang.org/grpc v1.43.0
+	golang.org/x/sys v0.0.0-20211205182925-97ca703d548d // indirect
+	google.golang.org/grpc v1.42.0
 )
 
 require (
+	entgo.io/ent v0.9.1
+	github.com/LiCHT-77/mini-chat/user v0.0.0-20211220051933-77a7b470bd94
 	github.com/golang/protobuf v1.4.3 // indirect
-	golang.org/x/net v0.0.0-20210405180319-a5a99cb37ef4 // indirect
-	golang.org/x/text v0.3.3 // indirect
+	golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2 // indirect
+	golang.org/x/text v0.3.6 // indirect
+	google.golang.org/protobuf v1.25.0
+)
+
+require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
-	google.golang.org/protobuf v1.25.0 // indirect
 )

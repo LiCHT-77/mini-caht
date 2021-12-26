@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package minichat.room;
+
+option go_package = "/pb";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service RoomService {
+    // Get a room
+    rpc GetRoom (GetRoomRequest) returns (Room);
+    // Create a room
+    rpc CreateRoom (Room) returns (Room);
+    // Update room info
+    rpc PutRoom (Room) returns (google.protobuf.Empty);
+    // Delete a room by room_id
+    rpc DeleteRoom (DeleteRoomRequest) returns (google.protobuf.Empty);
+    // Get room list
+    rpc GetRoomList (GetRoomListRequest) returns (GetRoomListResponse);
+    // User join a room 
+    rpc JoinRoom (JoinRoomRequest) returns (google.protobuf.Empty);
+    // User exit a room
+    rpc ExitRoom (ExitRoomRequest) returns (google.protobuf.Empty);
+}
+
+// Requests
+message GetRoomRequest{
+    int32 room_id = 1;
+}
+
+message DeleteRoomRequest{
+    int32 user_id = 1;
+    int32 room_id = 2;
+}
+
+message GetRoomListRequest{
+    int32 user_id = 1;
+}
+
+message JoinRoomRequest{
+    int32 user_id = 1;
+    int32 room_id = 2;
+}
+
+message ExitRoomRequest{
+    int32 user_id = 1;
+    int32 room_id = 2;
+}
+
+// Responses
+message GetRoomListResponse{
+    repeated Room room = 1;
+}
+
+message Room {
+    int32 id = 1;
+    string name = 2;
+    repeated int32 user_id = 3;
+    google.protobuf.Timestamp created_at = 4;
+    google.protobuf.Timestamp updated_at = 5;
+}
