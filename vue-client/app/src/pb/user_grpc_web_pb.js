@@ -1,5 +1,5 @@
 /**
- * @fileoverview gRPC-Web generated client stub for grpcuser
+ * @fileoverview gRPC-Web generated client stub for minichat.user
  * @enhanceable
  * @public
  */
@@ -16,7 +16,8 @@ const grpc = {};
 grpc.web = require('grpc-web');
 
 const proto = {};
-proto.grpcuser = require('./user_pb.js');
+proto.minichat = {};
+proto.minichat.user = require('./user_pb.js');
 
 /**
  * @param {string} hostname
@@ -26,7 +27,7 @@ proto.grpcuser = require('./user_pb.js');
  * @struct
  * @final
  */
-proto.grpcuser.UserServiceClient =
+proto.minichat.user.UserServiceClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'text';
@@ -52,7 +53,7 @@ proto.grpcuser.UserServiceClient =
  * @struct
  * @final
  */
-proto.grpcuser.UserServicePromiseClient =
+proto.minichat.user.UserServicePromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options.format = 'text';
@@ -73,39 +74,39 @@ proto.grpcuser.UserServicePromiseClient =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.LoginRequest,
- *   !proto.grpcuser.LoginResponse>}
+ *   !proto.minichat.user.LoginRequest,
+ *   !proto.minichat.user.LoginResponse>}
  */
 const methodDescriptor_UserService_Login = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/Login',
+  '/minichat.user.UserService/Login',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.LoginRequest,
-  proto.grpcuser.LoginResponse,
+  proto.minichat.user.LoginRequest,
+  proto.minichat.user.LoginResponse,
   /**
-   * @param {!proto.grpcuser.LoginRequest} request
+   * @param {!proto.minichat.user.LoginRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.LoginResponse.deserializeBinary
+  proto.minichat.user.LoginResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.LoginRequest} request The
+ * @param {!proto.minichat.user.LoginRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.LoginResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.LoginResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.LoginResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.LoginResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.login =
+proto.minichat.user.UserServiceClient.prototype.login =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/Login',
+      '/minichat.user.UserService/Login',
       request,
       metadata || {},
       methodDescriptor_UserService_Login,
@@ -114,17 +115,17 @@ proto.grpcuser.UserServiceClient.prototype.login =
 
 
 /**
- * @param {!proto.grpcuser.LoginRequest} request The
+ * @param {!proto.minichat.user.LoginRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.LoginResponse>}
+ * @return {!Promise<!proto.minichat.user.LoginResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.login =
+proto.minichat.user.UserServicePromiseClient.prototype.login =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/Login',
+      '/minichat.user.UserService/Login',
       request,
       metadata || {},
       methodDescriptor_UserService_Login);
@@ -134,39 +135,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.login =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.RegisterRequest,
- *   !proto.grpcuser.RegisterResponse>}
+ *   !proto.minichat.user.RegisterRequest,
+ *   !proto.minichat.user.RegisterResponse>}
  */
 const methodDescriptor_UserService_Register = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/Register',
+  '/minichat.user.UserService/Register',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.RegisterRequest,
-  proto.grpcuser.RegisterResponse,
+  proto.minichat.user.RegisterRequest,
+  proto.minichat.user.RegisterResponse,
   /**
-   * @param {!proto.grpcuser.RegisterRequest} request
+   * @param {!proto.minichat.user.RegisterRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.RegisterResponse.deserializeBinary
+  proto.minichat.user.RegisterResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.RegisterRequest} request The
+ * @param {!proto.minichat.user.RegisterRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.RegisterResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.RegisterResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.RegisterResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.RegisterResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.register =
+proto.minichat.user.UserServiceClient.prototype.register =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/Register',
+      '/minichat.user.UserService/Register',
       request,
       metadata || {},
       methodDescriptor_UserService_Register,
@@ -175,17 +176,17 @@ proto.grpcuser.UserServiceClient.prototype.register =
 
 
 /**
- * @param {!proto.grpcuser.RegisterRequest} request The
+ * @param {!proto.minichat.user.RegisterRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.RegisterResponse>}
+ * @return {!Promise<!proto.minichat.user.RegisterResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.register =
+proto.minichat.user.UserServicePromiseClient.prototype.register =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/Register',
+      '/minichat.user.UserService/Register',
       request,
       metadata || {},
       methodDescriptor_UserService_Register);
@@ -195,39 +196,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.register =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.GetUserRequest,
- *   !proto.grpcuser.GetUserResponse>}
+ *   !proto.minichat.user.GetUserRequest,
+ *   !proto.minichat.user.GetUserResponse>}
  */
 const methodDescriptor_UserService_GetUser = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/GetUser',
+  '/minichat.user.UserService/GetUser',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.GetUserRequest,
-  proto.grpcuser.GetUserResponse,
+  proto.minichat.user.GetUserRequest,
+  proto.minichat.user.GetUserResponse,
   /**
-   * @param {!proto.grpcuser.GetUserRequest} request
+   * @param {!proto.minichat.user.GetUserRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.GetUserResponse.deserializeBinary
+  proto.minichat.user.GetUserResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.GetUserRequest} request The
+ * @param {!proto.minichat.user.GetUserRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.GetUserResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.GetUserResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.GetUserResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.GetUserResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.getUser =
+proto.minichat.user.UserServiceClient.prototype.getUser =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/GetUser',
+      '/minichat.user.UserService/GetUser',
       request,
       metadata || {},
       methodDescriptor_UserService_GetUser,
@@ -236,17 +237,17 @@ proto.grpcuser.UserServiceClient.prototype.getUser =
 
 
 /**
- * @param {!proto.grpcuser.GetUserRequest} request The
+ * @param {!proto.minichat.user.GetUserRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.GetUserResponse>}
+ * @return {!Promise<!proto.minichat.user.GetUserResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.getUser =
+proto.minichat.user.UserServicePromiseClient.prototype.getUser =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/GetUser',
+      '/minichat.user.UserService/GetUser',
       request,
       metadata || {},
       methodDescriptor_UserService_GetUser);
@@ -256,39 +257,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.getUser =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.PutUserRequest,
- *   !proto.grpcuser.PutUserResponse>}
+ *   !proto.minichat.user.PutUserRequest,
+ *   !proto.minichat.user.PutUserResponse>}
  */
 const methodDescriptor_UserService_PutUser = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/PutUser',
+  '/minichat.user.UserService/PutUser',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.PutUserRequest,
-  proto.grpcuser.PutUserResponse,
+  proto.minichat.user.PutUserRequest,
+  proto.minichat.user.PutUserResponse,
   /**
-   * @param {!proto.grpcuser.PutUserRequest} request
+   * @param {!proto.minichat.user.PutUserRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.PutUserResponse.deserializeBinary
+  proto.minichat.user.PutUserResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.PutUserRequest} request The
+ * @param {!proto.minichat.user.PutUserRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.PutUserResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.PutUserResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.PutUserResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.PutUserResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.putUser =
+proto.minichat.user.UserServiceClient.prototype.putUser =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/PutUser',
+      '/minichat.user.UserService/PutUser',
       request,
       metadata || {},
       methodDescriptor_UserService_PutUser,
@@ -297,17 +298,17 @@ proto.grpcuser.UserServiceClient.prototype.putUser =
 
 
 /**
- * @param {!proto.grpcuser.PutUserRequest} request The
+ * @param {!proto.minichat.user.PutUserRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.PutUserResponse>}
+ * @return {!Promise<!proto.minichat.user.PutUserResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.putUser =
+proto.minichat.user.UserServicePromiseClient.prototype.putUser =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/PutUser',
+      '/minichat.user.UserService/PutUser',
       request,
       metadata || {},
       methodDescriptor_UserService_PutUser);
@@ -317,39 +318,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.putUser =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.DeleteUserRequest,
- *   !proto.grpcuser.DeleteUserResponse>}
+ *   !proto.minichat.user.DeleteUserRequest,
+ *   !proto.minichat.user.DeleteUserResponse>}
  */
 const methodDescriptor_UserService_DeleteUser = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/DeleteUser',
+  '/minichat.user.UserService/DeleteUser',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.DeleteUserRequest,
-  proto.grpcuser.DeleteUserResponse,
+  proto.minichat.user.DeleteUserRequest,
+  proto.minichat.user.DeleteUserResponse,
   /**
-   * @param {!proto.grpcuser.DeleteUserRequest} request
+   * @param {!proto.minichat.user.DeleteUserRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.DeleteUserResponse.deserializeBinary
+  proto.minichat.user.DeleteUserResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.DeleteUserRequest} request The
+ * @param {!proto.minichat.user.DeleteUserRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.DeleteUserResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.DeleteUserResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.DeleteUserResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.DeleteUserResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.deleteUser =
+proto.minichat.user.UserServiceClient.prototype.deleteUser =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/DeleteUser',
+      '/minichat.user.UserService/DeleteUser',
       request,
       metadata || {},
       methodDescriptor_UserService_DeleteUser,
@@ -358,17 +359,17 @@ proto.grpcuser.UserServiceClient.prototype.deleteUser =
 
 
 /**
- * @param {!proto.grpcuser.DeleteUserRequest} request The
+ * @param {!proto.minichat.user.DeleteUserRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.DeleteUserResponse>}
+ * @return {!Promise<!proto.minichat.user.DeleteUserResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.deleteUser =
+proto.minichat.user.UserServicePromiseClient.prototype.deleteUser =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/DeleteUser',
+      '/minichat.user.UserService/DeleteUser',
       request,
       metadata || {},
       methodDescriptor_UserService_DeleteUser);
@@ -378,39 +379,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.deleteUser =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.GetUsersRequest,
- *   !proto.grpcuser.GetUsersResponse>}
+ *   !proto.minichat.user.GetUsersRequest,
+ *   !proto.minichat.user.GetUsersResponse>}
  */
 const methodDescriptor_UserService_GetUsers = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/GetUsers',
+  '/minichat.user.UserService/GetUsers',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.GetUsersRequest,
-  proto.grpcuser.GetUsersResponse,
+  proto.minichat.user.GetUsersRequest,
+  proto.minichat.user.GetUsersResponse,
   /**
-   * @param {!proto.grpcuser.GetUsersRequest} request
+   * @param {!proto.minichat.user.GetUsersRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.GetUsersResponse.deserializeBinary
+  proto.minichat.user.GetUsersResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.GetUsersRequest} request The
+ * @param {!proto.minichat.user.GetUsersRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.GetUsersResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.GetUsersResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.GetUsersResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.GetUsersResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.getUsers =
+proto.minichat.user.UserServiceClient.prototype.getUsers =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/GetUsers',
+      '/minichat.user.UserService/GetUsers',
       request,
       metadata || {},
       methodDescriptor_UserService_GetUsers,
@@ -419,17 +420,17 @@ proto.grpcuser.UserServiceClient.prototype.getUsers =
 
 
 /**
- * @param {!proto.grpcuser.GetUsersRequest} request The
+ * @param {!proto.minichat.user.GetUsersRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.GetUsersResponse>}
+ * @return {!Promise<!proto.minichat.user.GetUsersResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.getUsers =
+proto.minichat.user.UserServicePromiseClient.prototype.getUsers =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/GetUsers',
+      '/minichat.user.UserService/GetUsers',
       request,
       metadata || {},
       methodDescriptor_UserService_GetUsers);
@@ -439,39 +440,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.getUsers =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.AddFriendRequest,
- *   !proto.grpcuser.AddFriendResponse>}
+ *   !proto.minichat.user.AddFriendRequest,
+ *   !proto.minichat.user.AddFriendResponse>}
  */
 const methodDescriptor_UserService_AddFriend = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/AddFriend',
+  '/minichat.user.UserService/AddFriend',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.AddFriendRequest,
-  proto.grpcuser.AddFriendResponse,
+  proto.minichat.user.AddFriendRequest,
+  proto.minichat.user.AddFriendResponse,
   /**
-   * @param {!proto.grpcuser.AddFriendRequest} request
+   * @param {!proto.minichat.user.AddFriendRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.AddFriendResponse.deserializeBinary
+  proto.minichat.user.AddFriendResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.AddFriendRequest} request The
+ * @param {!proto.minichat.user.AddFriendRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.AddFriendResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.AddFriendResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.AddFriendResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.AddFriendResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.addFriend =
+proto.minichat.user.UserServiceClient.prototype.addFriend =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/AddFriend',
+      '/minichat.user.UserService/AddFriend',
       request,
       metadata || {},
       methodDescriptor_UserService_AddFriend,
@@ -480,17 +481,17 @@ proto.grpcuser.UserServiceClient.prototype.addFriend =
 
 
 /**
- * @param {!proto.grpcuser.AddFriendRequest} request The
+ * @param {!proto.minichat.user.AddFriendRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.AddFriendResponse>}
+ * @return {!Promise<!proto.minichat.user.AddFriendResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.addFriend =
+proto.minichat.user.UserServicePromiseClient.prototype.addFriend =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/AddFriend',
+      '/minichat.user.UserService/AddFriend',
       request,
       metadata || {},
       methodDescriptor_UserService_AddFriend);
@@ -500,39 +501,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.addFriend =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.RemoveFriendRequest,
- *   !proto.grpcuser.RemoveFriendResponse>}
+ *   !proto.minichat.user.RemoveFriendRequest,
+ *   !proto.minichat.user.RemoveFriendResponse>}
  */
 const methodDescriptor_UserService_RemoveFriend = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/RemoveFriend',
+  '/minichat.user.UserService/RemoveFriend',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.RemoveFriendRequest,
-  proto.grpcuser.RemoveFriendResponse,
+  proto.minichat.user.RemoveFriendRequest,
+  proto.minichat.user.RemoveFriendResponse,
   /**
-   * @param {!proto.grpcuser.RemoveFriendRequest} request
+   * @param {!proto.minichat.user.RemoveFriendRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.RemoveFriendResponse.deserializeBinary
+  proto.minichat.user.RemoveFriendResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.RemoveFriendRequest} request The
+ * @param {!proto.minichat.user.RemoveFriendRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.RemoveFriendResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.RemoveFriendResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.RemoveFriendResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.RemoveFriendResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.removeFriend =
+proto.minichat.user.UserServiceClient.prototype.removeFriend =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/RemoveFriend',
+      '/minichat.user.UserService/RemoveFriend',
       request,
       metadata || {},
       methodDescriptor_UserService_RemoveFriend,
@@ -541,17 +542,17 @@ proto.grpcuser.UserServiceClient.prototype.removeFriend =
 
 
 /**
- * @param {!proto.grpcuser.RemoveFriendRequest} request The
+ * @param {!proto.minichat.user.RemoveFriendRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.RemoveFriendResponse>}
+ * @return {!Promise<!proto.minichat.user.RemoveFriendResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.removeFriend =
+proto.minichat.user.UserServicePromiseClient.prototype.removeFriend =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/RemoveFriend',
+      '/minichat.user.UserService/RemoveFriend',
       request,
       metadata || {},
       methodDescriptor_UserService_RemoveFriend);
@@ -561,39 +562,39 @@ proto.grpcuser.UserServicePromiseClient.prototype.removeFriend =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
- *   !proto.grpcuser.GetFriendsRequest,
- *   !proto.grpcuser.GetFriendsResponse>}
+ *   !proto.minichat.user.GetFriendsRequest,
+ *   !proto.minichat.user.GetFriendsResponse>}
  */
 const methodDescriptor_UserService_GetFriends = new grpc.web.MethodDescriptor(
-  '/grpcuser.UserService/GetFriends',
+  '/minichat.user.UserService/GetFriends',
   grpc.web.MethodType.UNARY,
-  proto.grpcuser.GetFriendsRequest,
-  proto.grpcuser.GetFriendsResponse,
+  proto.minichat.user.GetFriendsRequest,
+  proto.minichat.user.GetFriendsResponse,
   /**
-   * @param {!proto.grpcuser.GetFriendsRequest} request
+   * @param {!proto.minichat.user.GetFriendsRequest} request
    * @return {!Uint8Array}
    */
   function(request) {
     return request.serializeBinary();
   },
-  proto.grpcuser.GetFriendsResponse.deserializeBinary
+  proto.minichat.user.GetFriendsResponse.deserializeBinary
 );
 
 
 /**
- * @param {!proto.grpcuser.GetFriendsRequest} request The
+ * @param {!proto.minichat.user.GetFriendsRequest} request The
  *     request proto
  * @param {?Object<string, string>} metadata User defined
  *     call metadata
- * @param {function(?grpc.web.RpcError, ?proto.grpcuser.GetFriendsResponse)}
+ * @param {function(?grpc.web.RpcError, ?proto.minichat.user.GetFriendsResponse)}
  *     callback The callback function(error, response)
- * @return {!grpc.web.ClientReadableStream<!proto.grpcuser.GetFriendsResponse>|undefined}
+ * @return {!grpc.web.ClientReadableStream<!proto.minichat.user.GetFriendsResponse>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.grpcuser.UserServiceClient.prototype.getFriends =
+proto.minichat.user.UserServiceClient.prototype.getFriends =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/grpcuser.UserService/GetFriends',
+      '/minichat.user.UserService/GetFriends',
       request,
       metadata || {},
       methodDescriptor_UserService_GetFriends,
@@ -602,22 +603,22 @@ proto.grpcuser.UserServiceClient.prototype.getFriends =
 
 
 /**
- * @param {!proto.grpcuser.GetFriendsRequest} request The
+ * @param {!proto.minichat.user.GetFriendsRequest} request The
  *     request proto
  * @param {?Object<string, string>=} metadata User defined
  *     call metadata
- * @return {!Promise<!proto.grpcuser.GetFriendsResponse>}
+ * @return {!Promise<!proto.minichat.user.GetFriendsResponse>}
  *     Promise that resolves to the response
  */
-proto.grpcuser.UserServicePromiseClient.prototype.getFriends =
+proto.minichat.user.UserServicePromiseClient.prototype.getFriends =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/grpcuser.UserService/GetFriends',
+      '/minichat.user.UserService/GetFriends',
       request,
       metadata || {},
       methodDescriptor_UserService_GetFriends);
 };
 
 
-module.exports = proto.grpcuser;
+module.exports = proto.minichat.user;
 

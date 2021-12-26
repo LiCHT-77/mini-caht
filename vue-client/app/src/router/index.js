@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Dashboard from '../views/User/Dashboard.vue'
 import Profile from '../views/User/Profile.vue'
+import RoomList from '../views/Room/RoomList.vue'
 
 Vue.use(VueRouter)
 
@@ -36,7 +37,18 @@ const routes = [
   {
     path: '/profile',
     name: 'Profile',
-    component: Profile
+    component: Profile,
+    meta: {
+      authOnly: true
+    }
+  },
+  {
+    path: '/rooms',
+    name: 'Rooms',
+    component: RoomList,
+    meta: {
+      authOnly: true
+    }
   },
   {
     path: '/',
@@ -53,7 +65,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  var isAuth = Store.state.user.accessToken
+  var isAuth = Store.state.auth.accessToken
   if (to.matched.some(record => record.meta.authOnly) && !isAuth) {
     next({ name: 'Login' })
   } else if (to.matched.some(record => record.meta.guestOnly) && isAuth) {

@@ -1,18 +1,10 @@
 <template>
   <v-card class="mx-auto mt-5">
-    <v-list>
-      <template v-for="(friend, index) in friends">
-        <v-list-item :key="index">
-          <v-list-item-avatar color="grey darken-1"> </v-list-item-avatar>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ friend.getName() }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-
-        <v-divider v-if="index !== friends.length" :key="`divider-${index}`" inset></v-divider>
-      </template>
-    </v-list>
+    <user-list-component
+      name="Friends"
+      :users="this.friends"
+      refresh
+      @refresh="refreshFriends"></user-list-component>
     <v-card-actions>
       <v-btn v-on:click="addFriend">追加</v-btn>
     </v-card-actions>
@@ -21,8 +13,18 @@
 
 <script>
 import { mapState } from "vuex";
+import { GetFriendsRequest } from "../../pb/user_pb";
+import UserListComponent from "../../components/User/UserListComponent.vue"
 export default {
   name: "Dashboard",
+  components: {
+    UserListComponent,
+  },
+  data: function () {
+    return {
+      friends: [],
+    };
+  },
   computed: {
     ...mapState({
       user: function (state) {
@@ -31,25 +33,35 @@ export default {
       accessToken: function (state) {
         return state.user.accessToken;
       },
-      friends: function (state) {
-        return state.user.friends;
-      }
     }),
   },
   methods: {
     logout: function () {
-      this.$store.dispatch("user/logout");
+      this.$store.dispatch("auth/logout");
     },
-    addFriend: function() {
-      this.$store.dispatch("user/addFriend", {id: 1});
+    addFriend: function () {
+      this.$store.dispatch("user/addFriend", { id: 1 });
     },
-    refreshFriends: function() {
-      this.$store.dispatch('user/getFriends');
-    }
+    refreshFriends: function () {
+      var self = this;
+      var request = new GetFriendsRequest();
+      request.setId(this.$store.getters["user/getId"]);
+      this.$store.state.UserServiceClient.getFriends(
+        request,
+        this.$store.getters.getGrpcMetadata,
+        function (err, response) {
+          if (!err) {
+            self.friends = response.getFriendList();
+          } else {
+            console.log(err.message);
+          }
+        }
+      );
+    },
   },
-  created: function () {
+  mounted: function () {
     this.refreshFriends();
-  }
+  },
 };
 </script>
 

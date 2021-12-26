@@ -26,7 +26,7 @@ export default {
   methods: {
     login: function () {
       // validate
-      this.$store.dispatch("user/login", {
+      this.$store.dispatch("auth/login", {
         email: this.email,
         password: this.password,
       });
