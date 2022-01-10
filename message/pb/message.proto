@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package minichat.message;
+
+option go_package = "/pb";
+
+import "google/protobuf/timestamp.proto";
+
+service MessageService {
+    // Get a message
+    rpc GetMessage(GetMessageRequest) returns (Message);
+    // Post a new message
+    rpc PostMessage(Message) returns (Message);
+    // Get messages of a room
+    rpc GetMessageList(GetMessageListRequest) returns (stream Message);
+}
+
+// Requests
+message GetMessageRequest {
+    int32 message_id = 1;
+}
+
+message GetMessageListRequest {
+    int32 room_id = 1;
+}
+
+message Message {
+    int32 id = 1;
+    enum Types {
+        TEXT = 0;
+    }
+    Types type = 2;
+    string text = 3;
+    int32 user_id = 4;
+    int32 room_id = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}

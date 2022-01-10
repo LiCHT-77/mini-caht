@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  message:
+      build:
+        context: .
+        dockerfile: ./docker/Dockerfile
+        target: dev
+      tty: true
+      container_name: mini-chat-message
+      restart: always
+      volumes:
+        - .:/go/src
+      ports:
+        - 8083:8080
+  message_db:
+    image: mysql:8.0
+    platform: linux/x86_64
+    container_name: mini-chat-message-db
+    restart: always
+    volumes:
+      - message_db:/var/lib/mysql
+    ports:
+      - 3308:3306
+    environment:
+      MYSQL_DATABASE: message_db
+      MYSQL_ROOT_PASSWORD: root
+  message_redis:
+    image: redis:latest
+    container_name: mini-chat-message-redis
+    ports:
+      - 6379:6379
+
+networks:
+  default:
+    external:
+      name: mini_chat
+
+volumes:
+  message_db:
