@@ -4,6 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 import Cookies from "js-cookie"
 import { UserServiceClient } from '../pb/user_grpc_web_pb'
 import { RoomServiceClient } from '../pb/room_grpc_web_pb'
+import { MessageServiceClient } from '../pb/message_grpc_web_pb'
 import user from './modules/user'
 import auth from './modules/auth'
 
@@ -13,6 +14,7 @@ export default new Vuex.Store({
   state: {
     UserServiceClient: UserServiceClient,
     RoomServiceClient: RoomServiceClient,
+    MessageServiceClient: MessageServiceClient,
   },
   getters: {
     getGrpcMetadata: (state, getters) => {
@@ -28,6 +30,9 @@ export default new Vuex.Store({
     setRoomServiceClient(state, client) {
       state.RoomServiceClient = client
     },
+    setMessageServiceClient(state, client) {
+      state.MessageServiceClient = client
+    },
   },
   actions: {
     connectClients({ commit }, { hostname, port }) {
@@ -41,7 +46,12 @@ export default new Vuex.Store({
         null,
         null
       ))
-    }
+      commit('setMessageServiceClient', new MessageServiceClient(
+        'http://' + hostname + ':' + port,
+        null,
+        null
+      ))
+    },
   },
   modules: {
     user: user,

@@ -58,8 +58,11 @@
     </v-navigation-drawer>
 
     <v-main>
-      <v-container class="py-8 px-6" fluid>
-        <router-view />
+      <v-container
+        class="p-1"
+        fluid
+      >
+        <router-view/>
       </v-container>
     </v-main>
   </v-app>

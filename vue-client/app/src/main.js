@@ -3,8 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
+import ContentComponent from './components/ContentComponent.vue'
 
 Vue.config.productionTip = false
+
+Vue.component('content-component', ContentComponent)
 
 new Vue({
   router,

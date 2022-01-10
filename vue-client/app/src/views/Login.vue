@@ -3,8 +3,8 @@
     <v-card-title> ログイン </v-card-title>
     <v-card-text>
       <v-form v-on:submit="login">
-        <v-text-field v-model="email" label="メールアドレス" />
-        <v-text-field v-model="password" type="password" label="パスワード" />
+        <v-text-field v-model="email" @keyup.enter="login" label="メールアドレス" />
+        <v-text-field v-model="password" @keyup.enter="login" type="password" label="パスワード" />
       </v-form>
     </v-card-text>
     <v-card-actions>

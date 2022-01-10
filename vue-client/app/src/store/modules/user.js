@@ -27,12 +27,12 @@ const getters = {
 }
 
 const actions = {
-  register({rootState, commit, rootGetters}, { name, email, password }) {
-    var user = new User()
+  register({rootState, commit, rootGetters, dispatch}, { name, email, password }) {
+    let user = new User()
     user.setName(name)
     user.setEmail(email)
     user.setPassword(password)
-    var request = new RegisterRequest()
+    let request = new RegisterRequest()
     request.setUser(user)
     rootState.UserServiceClient.register(request, rootGetters.getGrpcMetadata, function (err, response) {
       if (!err) {
@@ -41,15 +41,18 @@ const actions = {
         router.push({ name: 'Dashboard' })
       } else {
         console.log(err.message)
+        if (err.code === 16) {
+          dispatch('auth/logout')
+        }
       }
     })
   },
-  updateUser({getters, rootGetters, commit, rootState}, {name, email}) {
-    var user = new User()
+  updateUser({getters, rootGetters, commit, rootState, dispatch}, {name, email}) {
+    let user = new User()
     user.setId(getters.getId)
     user.setName(name)
     user.setEmail(email)
-    var request = new PutUserRequest()
+    let request = new PutUserRequest()
     request.setUser(user)
     request.setId(getters.getId)
     rootState.UserServiceClient.putUser(request, rootGetters.getGrpcMetadata, function(err) {
@@ -57,24 +60,33 @@ const actions = {
         commit('setPbUser', user)
       } else {
         console.log(err.message)
+        if (err.code === 16) {
+          dispatch('auth/logout')
+        }
       }
     })
   },
-  addFriend({rootGetters, rootState}, {id}) {
-    var request = new AddFriendRequest
+  addFriend({rootGetters, rootState, dispatch}, {id}) {
+    let request = new AddFriendRequest
     request.setId(id)
     rootState.UserServiceClient.addFriend(request, rootGetters.getGrpcMetadata, function(err) {
       if (err) {
         console.log(err.message)
+        if (err.code === 16) {
+          dispatch('auth/logout')
+        }
       }
     })
   },
-  removeFriend({rootGetters, rootState}, {id}) {
-    var request = new RemoveFriendRequest
+  removeFriend({rootGetters, rootState, dispatch}, {id}) {
+    let request = new RemoveFriendRequest
     request.setId(id)
     rootState.UserServiceClient.removeFriend(request, rootGetters.getGrpcMetadata, function(err) {
       if (err) {
         console.log(err.message)
+        if (err.code === 16) {
+          dispatch('auth/logout')
+        }
       }
     })
   },

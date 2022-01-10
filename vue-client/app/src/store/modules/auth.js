@@ -23,7 +23,7 @@ const getters = {
 
 const actions = {
   login({rootState, commit, rootGetters}, { email, password }) {
-    var request = new LoginRequest()
+    let request = new LoginRequest()
     request.setEmail(email)
     request.setPassword(password)
     rootState.UserServiceClient.login(request, rootGetters.getGrpcMetadata, function (err, response) {
@@ -43,11 +43,12 @@ const actions = {
       email: '', 
       password: '',
     }, {root:true})
+    commit('user/setId', 0, {root: true})
     commit('setAccessToken', '')
     router.push({ name: 'Login' }).catch(() => { })
   },
-  loadUser({rootState, commit, rootGetters}) {
-    var request = new GetUserRequest()
+  loadUser({rootState, commit, rootGetters, dispatch}) {
+    let request = new GetUserRequest()
     request.setId(rootGetters['user/getId'])
     rootState.UserServiceClient.getUser(request, rootGetters.getGrpcMetadata, function (err, response) {
       if (!err) {
@@ -55,10 +56,7 @@ const actions = {
       } else {
         console.log(err.message)
         if (err.code === 16) {
-          commit('user/setId', 0, {root: true})
-          commit('setAccessToken', '')
-
-          router.push({ name: 'Login' }).catch(() => { })
+          dispatch('logout')
         }
       }
     })
