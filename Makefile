@@ -7,7 +7,7 @@ DB_USER = root
 DB_PASSWORD = root
 DB_PORT = 3306
 
-SERVICE_LIST := user room vue-client proxy
+SERVICE_LIST := user room message vue-client proxy
 
 # conpile protocol baffer 
 genpb:
