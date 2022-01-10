@@ -230,9 +230,22 @@ func (m *RoomMutation) OldName(ctx context.Context) (v string, err error) {
 	return oldValue.Name, nil
 }
 
+// ClearName clears the value of the "name" field.
+func (m *RoomMutation) ClearName() {
+	m.name = nil
+	m.clearedFields[room.FieldName] = struct{}{}
+}
+
+// NameCleared returns if the "name" field was cleared in this mutation.
+func (m *RoomMutation) NameCleared() bool {
+	_, ok := m.clearedFields[room.FieldName]
+	return ok
+}
+
 // ResetName resets all changes to the "name" field.
 func (m *RoomMutation) ResetName() {
 	m.name = nil
+	delete(m.clearedFields, room.FieldName)
 }
 
 // SetUserIds sets the "user_ids" field.
@@ -402,7 +415,11 @@ func (m *RoomMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *RoomMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(room.FieldName) {
+		fields = append(fields, room.FieldName)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -415,6 +432,11 @@ func (m *RoomMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *RoomMutation) ClearField(name string) error {
+	switch name {
+	case room.FieldName:
+		m.ClearName()
+		return nil
+	}
 	return fmt.Errorf("unknown Room nullable field %s", name)
 }
 

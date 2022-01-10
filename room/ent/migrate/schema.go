@@ -13,7 +13,7 @@ var (
 		{Name: "id", Type: field.TypeInt32, Increment: true},
 		{Name: "create_time", Type: field.TypeTime},
 		{Name: "update_time", Type: field.TypeTime},
-		{Name: "name", Type: field.TypeString},
+		{Name: "name", Type: field.TypeString, Nullable: true},
 		{Name: "user_ids", Type: field.TypeJSON},
 	}
 	// RoomsTable holds the schema information for the "rooms" table.

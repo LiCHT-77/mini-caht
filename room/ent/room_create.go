@@ -54,6 +54,14 @@ func (rc *RoomCreate) SetName(s string) *RoomCreate {
 	return rc
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (rc *RoomCreate) SetNillableName(s *string) *RoomCreate {
+	if s != nil {
+		rc.SetName(*s)
+	}
+	return rc
+}
+
 // SetUserIds sets the "user_ids" field.
 func (rc *RoomCreate) SetUserIds(i []int32) *RoomCreate {
 	rc.mutation.SetUserIds(i)
@@ -154,9 +162,6 @@ func (rc *RoomCreate) check() error {
 	}
 	if _, ok := rc.mutation.UpdateTime(); !ok {
 		return &ValidationError{Name: "update_time", err: errors.New(`ent: missing required field "update_time"`)}
-	}
-	if _, ok := rc.mutation.Name(); !ok {
-		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "name"`)}
 	}
 	if _, ok := rc.mutation.UserIds(); !ok {
 		return &ValidationError{Name: "user_ids", err: errors.New(`ent: missing required field "user_ids"`)}

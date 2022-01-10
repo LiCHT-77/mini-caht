@@ -11,7 +11,7 @@ cmd = "go build -o ./tmp/main ./cmd/server/main.go"
 # Binary file yields from `cmd`.
 bin = "tmp/main"
 # Customize binary.
-full_bin = "APP_ENV=dev APP_USER=air ./tmp/main -port 8080 -user root -pass root -addr mini-chat-room-db:3306 -dbname room_db"
+full_bin = "APP_ENV=dev APP_USER=air ./tmp/main -port 8080 -user root -pass root -addr mini-chat-room-db:3306 -dbname room_db -usaddr mini-chat-user:8080"
 # Watch these filename extensions.
 include_ext = ["go", "tpl", "tmpl", "html"]
 # Ignore these filename extensions or directories.

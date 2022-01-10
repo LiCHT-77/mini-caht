@@ -32,6 +32,20 @@ func (ru *RoomUpdate) SetName(s string) *RoomUpdate {
 	return ru
 }
 
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ru *RoomUpdate) SetNillableName(s *string) *RoomUpdate {
+	if s != nil {
+		ru.SetName(*s)
+	}
+	return ru
+}
+
+// ClearName clears the value of the "name" field.
+func (ru *RoomUpdate) ClearName() *RoomUpdate {
+	ru.mutation.ClearName()
+	return ru
+}
+
 // SetUserIds sets the "user_ids" field.
 func (ru *RoomUpdate) SetUserIds(i []int32) *RoomUpdate {
 	ru.mutation.SetUserIds(i)
@@ -138,6 +152,12 @@ func (ru *RoomUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: room.FieldName,
 		})
 	}
+	if ru.mutation.NameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Column: room.FieldName,
+		})
+	}
 	if value, ok := ru.mutation.UserIds(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeJSON,
@@ -167,6 +187,20 @@ type RoomUpdateOne struct {
 // SetName sets the "name" field.
 func (ruo *RoomUpdateOne) SetName(s string) *RoomUpdateOne {
 	ruo.mutation.SetName(s)
+	return ruo
+}
+
+// SetNillableName sets the "name" field if the given value is not nil.
+func (ruo *RoomUpdateOne) SetNillableName(s *string) *RoomUpdateOne {
+	if s != nil {
+		ruo.SetName(*s)
+	}
+	return ruo
+}
+
+// ClearName clears the value of the "name" field.
+func (ruo *RoomUpdateOne) ClearName() *RoomUpdateOne {
+	ruo.mutation.ClearName()
 	return ruo
 }
 
@@ -297,6 +331,12 @@ func (ruo *RoomUpdateOne) sqlSave(ctx context.Context) (_node *Room, err error) 
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
+			Column: room.FieldName,
+		})
+	}
+	if ruo.mutation.NameCleared() {
+		_spec.Fields.Clear = append(_spec.Fields.Clear, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
 			Column: room.FieldName,
 		})
 	}

@@ -362,6 +362,20 @@ func NameHasSuffix(v string) predicate.Room {
 	})
 }
 
+// NameIsNil applies the IsNil predicate on the "name" field.
+func NameIsNil() predicate.Room {
+	return predicate.Room(func(s *sql.Selector) {
+		s.Where(sql.IsNull(s.C(FieldName)))
+	})
+}
+
+// NameNotNil applies the NotNil predicate on the "name" field.
+func NameNotNil() predicate.Room {
+	return predicate.Room(func(s *sql.Selector) {
+		s.Where(sql.NotNull(s.C(FieldName)))
+	})
+}
+
 // NameEqualFold applies the EqualFold predicate on the "name" field.
 func NameEqualFold(v string) predicate.Room {
 	return predicate.Room(func(s *sql.Selector) {

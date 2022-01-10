@@ -11,19 +11,21 @@ import (
 	"github.com/LiCHT-77/mini-chat/room/pb"
 	"github.com/LiCHT-77/mini-chat/room/service"
 	"github.com/LiCHT-77/mini-chat/user/auth"
+	userpb "github.com/LiCHT-77/mini-chat/user/pb"
 	"github.com/go-sql-driver/mysql"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
 var (
-	port          = flag.Int("port", 8080, "a server port")
-	dbUser        = flag.String("user", "root", "database user")
-	dbPass        = flag.String("pass", "", "database user password")
-	dbAddr        = flag.String("addr", "", "database address")
-	dbName        = flag.String("dbname", "", "database name")
-	secretKey     = "secret"
-	tokenDuration = 15 * time.Minute
+	port            = flag.Int("port", 8080, "a server port")
+	dbUser          = flag.String("user", "root", "database user")
+	dbPass          = flag.String("pass", "", "database user password")
+	dbAddr          = flag.String("addr", "", "database address")
+	dbName          = flag.String("dbname", "", "database name")
+	userServiceAddr = flag.String("usaddr", "localhost:8080", "mini-chat RoomService address")
+	secretKey       = "secret"
+	tokenDuration   = 15 * time.Minute
 )
 
 func main() {
@@ -36,7 +38,7 @@ func main() {
 
 	entOption := []ent.Option{}
 
-	entOption = append(entOption, ent.Debug())
+	// entOption = append(entOption, ent.Debug())
 
 	mc := mysql.Config{
 		User:                 *dbUser,
@@ -48,17 +50,29 @@ func main() {
 		ParseTime:            true,
 	}
 
-	client, err := ent.Open("mysql", mc.FormatDSN(), entOption...)
+	dbClient, err := ent.Open("mysql", mc.FormatDSN(), entOption...)
 	if err != nil {
 		log.Fatalf("Error open mysql ent client: %v", err)
 	}
-	defer client.Close()
+	defer dbClient.Close()
+
+	var userSvcClientOps []grpc.DialOption
+
+	userSvcClientOps = append(userSvcClientOps, grpc.WithInsecure())
+
+	conn, err := grpc.Dial(*userServiceAddr, userSvcClientOps...)
+	if err != nil {
+		log.Fatalf("cannot connect minichat RoomService: %v", err)
+	}
+	userServiceClient := userpb.NewUserServiceClient(conn)
 
 	var ops []grpc.ServerOption
 
 	jwtManager := auth.NewJWTManager(secretKey, tokenDuration)
 	grpcServerPath := "/minichat.room.RoomService"
+
 	interceptor := auth.NewAuthInterceptor(jwtManager, map[string]bool{
+		grpcServerPath + "createRoom":  true,
 		grpcServerPath + "PutRoom":     true,
 		grpcServerPath + "DeleteRoom":  true,
 		grpcServerPath + "GetRoomList": true,
@@ -70,7 +84,7 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer(ops...)
-	pb.RegisterRoomServiceServer(grpcServer, service.NewRoomServer(client, jwtManager))
+	pb.RegisterRoomServiceServer(grpcServer, service.NewRoomServer(dbClient, jwtManager, userServiceClient))
 	reflection.Register(grpcServer)
 
 	if err := grpcServer.Serve(lis); err != nil {

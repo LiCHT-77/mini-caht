@@ -15,7 +15,7 @@ type Room struct {
 func (Room) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int32("id").Unique(),
-		field.String("name"),
+		field.String("name").Optional(),
 		field.JSON("user_ids", []int32{}),
 	}
 }

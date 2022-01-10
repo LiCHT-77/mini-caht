@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strings"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqljson"
@@ -9,6 +10,7 @@ import (
 	"github.com/LiCHT-77/mini-chat/room/ent/room"
 	"github.com/LiCHT-77/mini-chat/room/pb"
 	"github.com/LiCHT-77/mini-chat/user/auth"
+	userpb "github.com/LiCHT-77/mini-chat/user/pb"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -16,14 +18,16 @@ import (
 )
 
 type Server struct {
-	dbClient   *ent.Client
-	jwtManager *auth.JWTManager
+	dbClient          *ent.Client
+	userServiceClient userpb.UserServiceClient
+	jwtManager        *auth.JWTManager
 }
 
-func NewRoomServer(dbClient *ent.Client, jwtManager *auth.JWTManager) pb.RoomServiceServer {
+func NewRoomServer(dbClient *ent.Client, jwtManager *auth.JWTManager, userServiceClient userpb.UserServiceClient) pb.RoomServiceServer {
 	return &Server{
-		dbClient:   dbClient,
-		jwtManager: jwtManager,
+		dbClient:          dbClient,
+		userServiceClient: userServiceClient,
+		jwtManager:        jwtManager,
 	}
 }
 
@@ -33,7 +37,11 @@ func (s *Server) GetRoom(ctx context.Context, request *pb.GetRoomRequest) (*pb.R
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "connot find room: %v", err)
 	}
-	return encodePbRoom(room), nil
+	r, err := encodePbRoom(ctx, room, s)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
 }
 
 // Create a room
@@ -48,7 +56,11 @@ func (s *Server) CreateRoom(ctx context.Context, request *pb.Room) (*pb.Room, er
 		return nil, status.Errorf(codes.Internal, "connot create room: %v", err)
 	}
 
-	return encodePbRoom(room), nil
+	r, err := encodePbRoom(ctx, room, s)
+	if err != nil {
+		return nil, err
+	}
+	return r, nil
 }
 
 // Update room info
@@ -68,10 +80,7 @@ func (s *Server) PutRoom(ctx context.Context, request *pb.Room) (*emptypb.Empty,
 		return nil, status.Errorf(codes.PermissionDenied, "authorized user is not member of the room")
 	}
 
-	if _, err := room.Update().
-		SetName(request.Name).
-		SetUserIds(request.GetUserId()).
-		Save(ctx); err != nil {
+	if _, err := room.Update().SetName(request.Name).Save(ctx); err != nil {
 		return nil, status.Errorf(codes.Internal, "connot update room: %v", err)
 	}
 
@@ -86,7 +95,7 @@ func (s *Server) DeleteRoom(ctx context.Context, request *pb.DeleteRoomRequest) 
 // Get room list
 func (s *Server) GetRoomList(ctx context.Context, request *pb.GetRoomListRequest) (*pb.GetRoomListResponse, error) {
 	rooms, err := s.dbClient.Room.Query().Where(func(s *sql.Selector) {
-		s.Where(sqljson.ValueEQ(room.FieldUserIds, request.GetUserId()))
+		s.Where(sqljson.ValueContains(room.FieldUserIds, request.GetUserId()))
 	}).All(ctx)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot get rooms: %v", err)
@@ -95,7 +104,11 @@ func (s *Server) GetRoomList(ctx context.Context, request *pb.GetRoomListRequest
 	var roomList []*pb.Room
 
 	for _, room := range rooms {
-		roomList = append(roomList, encodePbRoom(room))
+		r, err := encodePbRoom(ctx, room, s)
+		if err != nil {
+			return nil, err
+		}
+		roomList = append(roomList, r)
 	}
 
 	return &pb.GetRoomListResponse{Room: roomList}, nil
@@ -185,12 +198,37 @@ func Int32Contains(s []int32, e int32) bool {
 	return false
 }
 
-func encodePbRoom(room *ent.Room) *pb.Room {
+func encodePbRoom(ctx context.Context, room *ent.Room, s *Server) (*pb.Room, error) {
+	roomName := room.Name
+	if roomName == "" {
+		getUsersRequest := &userpb.GetUsersRequest{
+			Ids: room.UserIds,
+		}
+		response, err := s.userServiceClient.GetUsers(ctx, getUsersRequest)
+		if err != nil {
+			return nil, err
+		}
+		users := response.GetUser()
+
+		authUser, err := auth.GetAuthUser(ctx, s)
+		if err != nil {
+			return nil, err
+		}
+
+		userNames := []string{}
+		for _, user := range users {
+			if user.GetId() != authUser.Id {
+				userNames = append(userNames, user.GetName())
+			}
+		}
+
+		roomName = strings.Join(userNames, ",")
+	}
 	return &pb.Room{
 		Id:        room.ID,
-		Name:      room.Name,
+		Name:      roomName,
 		UserId:    room.UserIds,
 		CreatedAt: ts.New(room.CreateTime),
 		UpdatedAt: ts.New(room.UpdateTime),
-	}
+	}, nil
 }
