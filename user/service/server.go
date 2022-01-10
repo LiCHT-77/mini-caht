@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"entgo.io/ent/dialect/sql"
+	roompb "github.com/LiCHT-77/mini-chat/room/pb"
 	"github.com/LiCHT-77/mini-chat/user/auth"
 	"github.com/LiCHT-77/mini-chat/user/ent"
 	"github.com/LiCHT-77/mini-chat/user/ent/user"
@@ -11,19 +12,22 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type Server struct {
-	dbClient   *ent.Client
-	jwtManager *auth.JWTManager
-	hashKey    int
+	dbClient          *ent.Client
+	roomServiceClient roompb.RoomServiceClient
+	jwtManager        *auth.JWTManager
+	hashKey           int
 }
 
-func NewUserServer(dbClient *ent.Client, jwtManager *auth.JWTManager, hashKey int) pb.UserServiceServer {
+func NewUserServer(dbClient *ent.Client, jwtManager *auth.JWTManager, hashKey int, roomServiceClient roompb.RoomServiceClient) pb.UserServiceServer {
 	return &Server{
-		dbClient:   dbClient,
-		jwtManager: jwtManager,
-		hashKey:    hashKey,
+		dbClient:          dbClient,
+		roomServiceClient: roomServiceClient,
+		jwtManager:        jwtManager,
+		hashKey:           hashKey,
 	}
 }
 
@@ -65,7 +69,6 @@ func (s *Server) Register(ctx context.Context, request *pb.RegisterRequest) (*pb
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "incorrect password: %w", err)
 	}
-
 	user, err := s.dbClient.User.
 		Create().
 		SetName(request.GetUser().Name).
@@ -106,7 +109,7 @@ func (s *Server) GetUser(ctx context.Context, request *pb.GetUserRequest) (*pb.G
 }
 
 // Update authorized user info
-func (s *Server) PutUser(ctx context.Context, request *pb.PutUserRequest) (*pb.PutUserResponse, error) {
+func (s *Server) PutUser(ctx context.Context, request *pb.PutUserRequest) (*emptypb.Empty, error) {
 	if authUser, err := auth.GetAuthUser(ctx, s); err != nil || authUser.Id != request.GetId() {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update user")
 	}
@@ -119,20 +122,24 @@ func (s *Server) PutUser(ctx context.Context, request *pb.PutUserRequest) (*pb.P
 		return nil, status.Errorf(codes.Internal, "cannot update user: %v", err)
 	}
 
-	return &pb.PutUserResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 // Delete an user by user_id
-func (s *Server) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*pb.DeleteUserResponse, error) {
-	return nil, nil
+func (s *Server) DeleteUser(ctx context.Context, request *pb.DeleteUserRequest) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, nil
 }
 
 // Get user list by array of user_id
 func (s *Server) GetUsers(ctx context.Context, request *pb.GetUsersRequest) (*pb.GetUsersResponse, error) {
+	var ids []int
+	for _, id := range request.GetIds() {
+		ids = append(ids, int(id))
+	}
+
 	users, err := s.dbClient.User.Query().Where(func(s *sql.Selector) {
-		s.Where(sql.InInts(user.FieldID, 1, 2, 3))
-	}).
-		All(ctx)
+		s.Where(sql.InInts(user.FieldID, ids...))
+	}).All(ctx)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "cannot get users: %v", err)
 	}
@@ -146,7 +153,7 @@ func (s *Server) GetUsers(ctx context.Context, request *pb.GetUsersRequest) (*pb
 }
 
 // Authorized user add friend by user_id
-func (s *Server) AddFriend(ctx context.Context, request *pb.AddFriendRequest) (*pb.AddFriendResponse, error) {
+func (s *Server) AddFriend(ctx context.Context, request *pb.AddFriendRequest) (*emptypb.Empty, error) {
 	authUser, err := auth.GetAuthUser(ctx, s)
 	if err != nil {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update user: %v", err)
@@ -160,11 +167,11 @@ func (s *Server) AddFriend(ctx context.Context, request *pb.AddFriendRequest) (*
 		return nil, status.Errorf(codes.Internal, "cannot add friend: %v", err)
 	}
 
-	return &pb.AddFriendResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 // Authorized user remove friend by user_id
-func (s *Server) RemoveFriend(ctx context.Context, request *pb.RemoveFriendRequest) (*pb.RemoveFriendResponse, error) {
+func (s *Server) RemoveFriend(ctx context.Context, request *pb.RemoveFriendRequest) (*emptypb.Empty, error) {
 	authUser, err := auth.GetAuthUser(ctx, s)
 	if err != nil {
 		return nil, status.Errorf(codes.PermissionDenied, "cannot update user: %v", err)
@@ -178,7 +185,7 @@ func (s *Server) RemoveFriend(ctx context.Context, request *pb.RemoveFriendReque
 		return nil, status.Errorf(codes.Internal, "cannot add friend: %v", err)
 	}
 
-	return &pb.RemoveFriendResponse{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 // Get user list friends of an user
@@ -201,11 +208,28 @@ func (s *Server) GetFriends(ctx context.Context, request *pb.GetFriendsRequest) 
 	return &pb.GetFriendsResponse{Friend: pbFriends}, nil
 }
 
+func (s *Server) Search(ctx context.Context, request *pb.SearchRequest) (*pb.SearchResponse, error) {
+	keyword := request.GetKeyword()
+	users, err := s.dbClient.User.Query().Where(user.NameContains(keyword)).Limit(50).All(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
+	}
+
+	var response pb.SearchResponse
+
+	for _, user := range users {
+		response.User = append(response.User, encodeToProtoUser(user))
+	}
+
+	return &response, nil
+}
+
 // Get auth.JwtManger
 func (s *Server) GetJwtManager() *auth.JWTManager {
 	return s.jwtManager
 }
 
+// ent.User to pb.User
 func encodeToProtoUser(user *ent.User) *pb.User {
 	return &pb.User{
 		Id:    int32(user.ID),

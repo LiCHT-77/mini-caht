@@ -47,7 +47,6 @@ func (m *JWTManager) Verify(accessToken string) (*UserClaims, error) {
 			return []byte(m.secretKey), nil
 		},
 	)
-
 	if err != nil {
 		return nil, fmt.Errorf("invaid token: %w", err)
 	}

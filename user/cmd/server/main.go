@@ -7,6 +7,7 @@ import (
 	"net"
 	"time"
 
+	roompb "github.com/LiCHT-77/mini-chat/room/pb"
 	"github.com/LiCHT-77/mini-chat/user/auth"
 	"github.com/LiCHT-77/mini-chat/user/ent"
 	"github.com/LiCHT-77/mini-chat/user/pb"
@@ -17,14 +18,15 @@ import (
 )
 
 var (
-	port          = flag.Int("port", 8080, "a server port")
-	hasKey        = flag.Int("hashkey", 100, "hash key")
-	dbUser        = flag.String("user", "root", "database user")
-	dbPass        = flag.String("pass", "", "database user password")
-	dbAddr        = flag.String("addr", "", "database address")
-	dbName        = flag.String("dbname", "", "database name")
-	secretKey     = "secret"
-	tokenDuration = 15 * time.Minute
+	port            = flag.Int("port", 8080, "a server port")
+	hasKey          = flag.Int("hashkey", 100, "hash key")
+	dbUser          = flag.String("user", "root", "database user")
+	dbPass          = flag.String("pass", "", "database user password")
+	dbAddr          = flag.String("addr", "", "database address")
+	dbName          = flag.String("dbname", "", "database name")
+	roomServiceAddr = flag.String("rsaddr", "localhost:8080", "mini-chat RoomService address")
+	secretKey       = "secret"
+	tokenDuration   = 24 * time.Hour
 )
 
 func main() {
@@ -37,7 +39,7 @@ func main() {
 
 	entOption := []ent.Option{}
 
-	entOption = append(entOption, ent.Debug())
+	// entOption = append(entOption, ent.Debug())
 
 	mc := mysql.Config{
 		User:                 *dbUser,
@@ -49,24 +51,42 @@ func main() {
 		ParseTime:            true,
 	}
 
-	client, err := ent.Open("mysql", mc.FormatDSN(), entOption...)
+	dbClient, err := ent.Open("mysql", mc.FormatDSN(), entOption...)
 	if err != nil {
 		log.Fatalf("Error open mysql ent client: %v", err)
 	}
-	defer client.Close()
+	defer dbClient.Close()
+
+	var roomSvcClientOps []grpc.DialOption
+
+	roomSvcClientOps = append(roomSvcClientOps, grpc.WithInsecure())
+
+	conn, err := grpc.Dial(*roomServiceAddr, roomSvcClientOps...)
+	if err != nil {
+		log.Fatalf("cannot connect minichat RoomService: %v", err)
+	}
+	roomServiceClient := roompb.NewRoomServiceClient(conn)
 
 	var ops []grpc.ServerOption
 
 	jwtManager := auth.NewJWTManager(secretKey, tokenDuration)
 	interceptor := auth.NewAuthInterceptor(jwtManager, map[string]bool{
-		"/minichat.user.UserService/GetUser": false,
+		"/minichat.user.UserService/Login":        false,
+		"/minichat.user.UserService/Register":     false,
+		"/minichat.user.UserService/GetUser":      false,
+		"/minichat.user.UserService/PutUser":      true,
+		"/minichat.user.UserService/DeleteUser":   true,
+		"/minichat.user.UserService/GetUsers":     false,
+		"/minichat.user.UserService/AddFriend":    true,
+		"/minichat.user.UserService/RemoveFriend": true,
+		"/minichat.user.UserService/GetFriends":   true,
 	})
 	ops = []grpc.ServerOption{
 		grpc.UnaryInterceptor(interceptor.Unary()),
 	}
 
 	grpcServer := grpc.NewServer(ops...)
-	pb.RegisterUserServiceServer(grpcServer, service.NewUserServer(client, jwtManager, *hasKey))
+	pb.RegisterUserServiceServer(grpcServer, service.NewUserServer(dbClient, jwtManager, *hasKey, roomServiceClient))
 	reflection.Register(grpcServer)
 
 	if err := grpcServer.Serve(lis); err != nil {

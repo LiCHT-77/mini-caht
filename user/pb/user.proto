@@ -4,6 +4,8 @@ package minichat.user;
 
 option go_package = "/pb";
 
+import "google/protobuf/empty.proto";
+
 service UserService {
     // An user login
     rpc Login (LoginRequest) returns (LoginResponse);
@@ -15,22 +17,25 @@ service UserService {
     rpc GetUser (GetUserRequest) returns (GetUserResponse);
 
     // Update user info
-    rpc PutUser (PutUserRequest) returns (PutUserResponse);
+    rpc PutUser (PutUserRequest) returns (google.protobuf.Empty);
     
     // Delete user by id
-    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+    rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty);
     
     // Get user list by ids
     rpc GetUsers (GetUsersRequest) returns (GetUsersResponse);
 
     // Add a freind by user_id
-    rpc AddFriend (AddFriendRequest) returns (AddFriendResponse);
+    rpc AddFriend (AddFriendRequest) returns (google.protobuf.Empty);
 
     // Remove a freind by usere_id
-    rpc RemoveFriend (RemoveFriendRequest) returns (RemoveFriendResponse);
+    rpc RemoveFriend (RemoveFriendRequest) returns (google.protobuf.Empty);
 
     // Get friend list of authorized user
     rpc GetFriends (GetFriendsRequest) returns (GetFriendsResponse);
+
+    // Search users
+    rpc Search(SearchRequest) returns (SearchResponse);
 }
 
 // Requests
@@ -72,6 +77,10 @@ message GetFriendsRequest {
     int32 id = 1;
 }
 
+message SearchRequest {
+    string keyword = 1;
+}
+
 // Responses
 message LoginResponse {
     User user = 1;
@@ -87,28 +96,16 @@ message GetUserResponse {
     User user = 1;
 }
 
-message PutUserResponse {
-    //
-}
-
-message DeleteUserResponse {
-    //
-}
-
 message GetUsersResponse {
     repeated User user = 1;
 }
 
-message AddFriendResponse {
-    // 
-}
-
-message RemoveFriendResponse {
-    //
-}
-
 message GetFriendsResponse {
     repeated User friend = 1;
+}
+
+message SearchResponse {
+    repeated User user = 1;
 }
 
 // Objects

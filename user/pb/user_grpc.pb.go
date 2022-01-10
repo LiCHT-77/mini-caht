@@ -7,6 +7,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -25,17 +26,19 @@ type UserServiceClient interface {
 	// Get an user by id
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserResponse, error)
 	// Update user info
-	PutUser(ctx context.Context, in *PutUserRequest, opts ...grpc.CallOption) (*PutUserResponse, error)
+	PutUser(ctx context.Context, in *PutUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Delete user by id
-	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
+	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Get user list by ids
 	GetUsers(ctx context.Context, in *GetUsersRequest, opts ...grpc.CallOption) (*GetUsersResponse, error)
 	// Add a freind by user_id
-	AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*AddFriendResponse, error)
+	AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Remove a freind by usere_id
-	RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*RemoveFriendResponse, error)
+	RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// Get friend list of authorized user
 	GetFriends(ctx context.Context, in *GetFriendsRequest, opts ...grpc.CallOption) (*GetFriendsResponse, error)
+	// Search users
+	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
 }
 
 type userServiceClient struct {
@@ -73,8 +76,8 @@ func (c *userServiceClient) GetUser(ctx context.Context, in *GetUserRequest, opt
 	return out, nil
 }
 
-func (c *userServiceClient) PutUser(ctx context.Context, in *PutUserRequest, opts ...grpc.CallOption) (*PutUserResponse, error) {
-	out := new(PutUserResponse)
+func (c *userServiceClient) PutUser(ctx context.Context, in *PutUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/minichat.user.UserService/PutUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -82,8 +85,8 @@ func (c *userServiceClient) PutUser(ctx context.Context, in *PutUserRequest, opt
 	return out, nil
 }
 
-func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
-	out := new(DeleteUserResponse)
+func (c *userServiceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/minichat.user.UserService/DeleteUser", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -100,8 +103,8 @@ func (c *userServiceClient) GetUsers(ctx context.Context, in *GetUsersRequest, o
 	return out, nil
 }
 
-func (c *userServiceClient) AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*AddFriendResponse, error) {
-	out := new(AddFriendResponse)
+func (c *userServiceClient) AddFriend(ctx context.Context, in *AddFriendRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/minichat.user.UserService/AddFriend", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -109,8 +112,8 @@ func (c *userServiceClient) AddFriend(ctx context.Context, in *AddFriendRequest,
 	return out, nil
 }
 
-func (c *userServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*RemoveFriendResponse, error) {
-	out := new(RemoveFriendResponse)
+func (c *userServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/minichat.user.UserService/RemoveFriend", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -121,6 +124,15 @@ func (c *userServiceClient) RemoveFriend(ctx context.Context, in *RemoveFriendRe
 func (c *userServiceClient) GetFriends(ctx context.Context, in *GetFriendsRequest, opts ...grpc.CallOption) (*GetFriendsResponse, error) {
 	out := new(GetFriendsResponse)
 	err := c.cc.Invoke(ctx, "/minichat.user.UserService/GetFriends", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
+	out := new(SearchResponse)
+	err := c.cc.Invoke(ctx, "/minichat.user.UserService/Search", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -138,17 +150,19 @@ type UserServiceServer interface {
 	// Get an user by id
 	GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error)
 	// Update user info
-	PutUser(context.Context, *PutUserRequest) (*PutUserResponse, error)
+	PutUser(context.Context, *PutUserRequest) (*emptypb.Empty, error)
 	// Delete user by id
-	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
+	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
 	// Get user list by ids
 	GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error)
 	// Add a freind by user_id
-	AddFriend(context.Context, *AddFriendRequest) (*AddFriendResponse, error)
+	AddFriend(context.Context, *AddFriendRequest) (*emptypb.Empty, error)
 	// Remove a freind by usere_id
-	RemoveFriend(context.Context, *RemoveFriendRequest) (*RemoveFriendResponse, error)
+	RemoveFriend(context.Context, *RemoveFriendRequest) (*emptypb.Empty, error)
 	// Get friend list of authorized user
 	GetFriends(context.Context, *GetFriendsRequest) (*GetFriendsResponse, error)
+	// Search users
+	Search(context.Context, *SearchRequest) (*SearchResponse, error)
 }
 
 // UnimplementedUserServiceServer should be embedded to have forward compatible implementations.
@@ -164,23 +178,26 @@ func (UnimplementedUserServiceServer) Register(context.Context, *RegisterRequest
 func (UnimplementedUserServiceServer) GetUser(context.Context, *GetUserRequest) (*GetUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-func (UnimplementedUserServiceServer) PutUser(context.Context, *PutUserRequest) (*PutUserResponse, error) {
+func (UnimplementedUserServiceServer) PutUser(context.Context, *PutUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PutUser not implemented")
 }
-func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
+func (UnimplementedUserServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
 func (UnimplementedUserServiceServer) GetUsers(context.Context, *GetUsersRequest) (*GetUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUsers not implemented")
 }
-func (UnimplementedUserServiceServer) AddFriend(context.Context, *AddFriendRequest) (*AddFriendResponse, error) {
+func (UnimplementedUserServiceServer) AddFriend(context.Context, *AddFriendRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddFriend not implemented")
 }
-func (UnimplementedUserServiceServer) RemoveFriend(context.Context, *RemoveFriendRequest) (*RemoveFriendResponse, error) {
+func (UnimplementedUserServiceServer) RemoveFriend(context.Context, *RemoveFriendRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveFriend not implemented")
 }
 func (UnimplementedUserServiceServer) GetFriends(context.Context, *GetFriendsRequest) (*GetFriendsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFriends not implemented")
+}
+func (UnimplementedUserServiceServer) Search(context.Context, *SearchRequest) (*SearchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
 
 // UnsafeUserServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -356,6 +373,24 @@ func _UserService_GetFriends_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SearchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).Search(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/minichat.user.UserService/Search",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).Search(ctx, req.(*SearchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -398,6 +433,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFriends",
 			Handler:    _UserService_GetFriends_Handler,
+		},
+		{
+			MethodName: "Search",
+			Handler:    _UserService_Search_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

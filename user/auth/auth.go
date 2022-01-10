@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"log"
 
 	"github.com/LiCHT-77/mini-chat/user/pb"
 	"google.golang.org/grpc"
@@ -27,11 +26,17 @@ func (i *AuthInterceptor) Unary() grpc.UnaryServerInterceptor {
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (interface{}, error) {
-		log.Println("--> unary interceptor: ", info.FullMethod)
-
 		err := i.authorize(ctx, info.FullMethod)
 		if err != nil {
 			return nil, err
+		}
+
+		if authOnly := i.isAuthOnly(info.FullMethod); authOnly {
+			accessToken, err := GetAccessToken(ctx)
+			if err != nil {
+				return nil, err
+			}
+			ctx = metadata.AppendToOutgoingContext(ctx, "authorization", accessToken)
 		}
 
 		return handler(ctx, req)
@@ -45,8 +50,6 @@ func (i *AuthInterceptor) Stream() grpc.StreamServerInterceptor {
 		info *grpc.StreamServerInfo,
 		handler grpc.StreamHandler,
 	) error {
-		log.Println("--> stream interceptor: ", info.FullMethod)
-
 		err := i.authorize(stream.Context(), info.FullMethod)
 		if err != nil {
 			return err
@@ -56,9 +59,13 @@ func (i *AuthInterceptor) Stream() grpc.StreamServerInterceptor {
 	}
 }
 
-func (i *AuthInterceptor) authorize(ctx context.Context, method string) error {
+func (i *AuthInterceptor) isAuthOnly(method string) bool {
 	authOnly, ok := i.authOnly[method]
-	if !ok || !authOnly {
+	return ok && authOnly
+}
+
+func (i *AuthInterceptor) authorize(ctx context.Context, method string) error {
+	if authOnly := i.isAuthOnly(method); !authOnly {
 		return nil
 	}
 
@@ -72,13 +79,31 @@ func (i *AuthInterceptor) authorize(ctx context.Context, method string) error {
 		return status.Errorf(codes.Unauthenticated, "authorization token is not provided")
 	}
 
-	accessToken := values[0]
-	_, err := i.jwtManager.Verify(accessToken)
+	accessToken, err := GetAccessToken(ctx)
 	if err != nil {
+		return err
+	}
+	if _, err := i.jwtManager.Verify(accessToken); err != nil {
 		return status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)
 	}
 
 	return nil
+}
+
+func GetAccessToken(ctx context.Context) (string, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return "", status.Errorf(codes.Unauthenticated, "metadata is not provided")
+	}
+
+	values := md["authorization"]
+	if len(values) == 0 {
+		return "", status.Errorf(codes.Unauthenticated, "authorization token is not provided")
+	}
+
+	accessToken := values[0]
+
+	return accessToken, nil
 }
 
 type HasAuthServer interface {
@@ -86,17 +111,10 @@ type HasAuthServer interface {
 }
 
 func GetAuthUser(ctx context.Context, s HasAuthServer) (*pb.User, error) {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, status.Errorf(codes.Unauthenticated, "metadata is not provided")
+	accessToken, err := GetAccessToken(ctx)
+	if err != nil {
+		return nil, err
 	}
-
-	values := md["authorization"]
-	if len(values) == 0 {
-		return nil, status.Errorf(codes.Unauthenticated, "authorization token is not provided")
-	}
-
-	accessToken := values[0]
 	claims, err := s.GetJwtManager().Verify(accessToken)
 	if err != nil {
 		return nil, status.Errorf(codes.Unauthenticated, "access token is invalid: %v", err)

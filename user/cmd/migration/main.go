@@ -21,7 +21,7 @@ func main() {
 	flag.Parse()
 	entOption := []ent.Option{}
 
-	entOption = append(entOption, ent.Debug())
+	// entOption = append(entOption, ent.Debug())
 
 	mc := mysql.Config{
 		User:                 *dbUser,
